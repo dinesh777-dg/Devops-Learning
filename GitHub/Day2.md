@@ -1,4 +1,4 @@
-1. Git Reset
+1. **Git Reset**
 
 git reset is used to move the current branch's HEAD to another commit. Depending on the reset mode, it can also modify the staging area and working directory.
 
