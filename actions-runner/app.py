@@ -21,8 +21,9 @@ class MyHandler(BaseHTTPRequestHandler):
 
         self.wfile.write(response.encode())
 
+
 server = HTTPServer(("0.0.0.0", 8080), MyHandler)
 
-print("Application started on port 8080")
+print("Application started on port 8080", flush=True)
 
 server.serve_forever()
