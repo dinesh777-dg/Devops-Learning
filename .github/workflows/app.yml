@@ -1,0 +1,52 @@
+name: Run Application on Self Hosted Runner
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  run-application:
+
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check Python
+        run: |
+          python3 --version
+
+      - name: Start Application
+        run: |
+          echo "Starting application..."
+
+          python3 app.py > app.log 2>&1 &
+
+          echo $! > app.pid
+
+          sleep 3
+
+      - name: Test Application
+        run: |
+          echo "Testing application..."
+
+          curl http://localhost:8080
+
+      - name: Display Application Logs
+        run: |
+          echo "Application logs:"
+          cat app.log
+
+      - name: Stop Application
+        if: always()
+        run: |
+          if [ -f app.pid ]; then
+            kill $(cat app.pid) || true
+          fi
+
+          echo "Application stopped."
