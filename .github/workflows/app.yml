@@ -1,4 +1,4 @@
-name: Run Application on Self Hosted Runner
+name: Run Application
 
 on:
   push:
@@ -9,44 +9,75 @@ on:
 
 jobs:
   run-application:
-
     runs-on: self-hosted
 
     steps:
 
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Check Python
+      - name: Check Environment
         run: |
+          echo "Runner: $RUNNER_NAME"
+          echo "OS: $RUNNER_OS"
+          echo "Architecture: $RUNNER_ARCH"
+          echo "Hostname: $(hostname)"
+          echo "User: $(whoami)"
+
+          echo "Python:"
           python3 --version
+
+          echo "Curl:"
+          curl --version | head -n 1
 
       - name: Start Application
         run: |
           echo "Starting application..."
 
           python3 app.py > app.log 2>&1 &
+          APP_PID=$!
 
-          echo $! > app.pid
+          echo $APP_PID > app.pid
+
+          echo "Application PID: $APP_PID"
 
           sleep 3
+
+          echo "Checking if application process is running..."
+
+          if kill -0 $APP_PID 2>/dev/null; then
+              echo "Application process is running."
+          else
+              echo "Application failed to start."
+              echo "Application log:"
+              cat app.log
+              exit 1
+          fi
 
       - name: Test Application
         run: |
           echo "Testing application..."
 
-          curl http://localhost:8080
-
-      - name: Display Application Logs
-        run: |
-          echo "Application logs:"
+          echo "Application log:"
           cat app.log
+
+          echo ""
+          echo "Testing port 8080..."
+
+          curl -v http://127.0.0.1:8080
 
       - name: Stop Application
         if: always()
         run: |
-          if [ -f app.pid ]; then
-            kill $(cat app.pid) || true
-          fi
+          echo "Stopping application..."
 
-          echo "Application stopped."
+          if [ -f app.pid ]; then
+              APP_PID=$(cat app.pid)
+
+              if kill -0 $APP_PID 2>/dev/null; then
+                  kill $APP_PID
+                  echo "Application stopped."
+              else
+                  echo "Application is already stopped."
+              fi
+          fi
