@@ -1,0 +1,28 @@
+name: node pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  basic:
+    runs-on: ["Devops-Learning01"]
+    steps:
+      - name: clone the code
+        uses: actions/checkout@v7
+
+      - name: setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Node application
+        run: |
+          node app.js &
+          sleep 5 
+          curl http://localhost:8080
+          curl http://localhost:8080/health
+          pkill -f "node app.js"
