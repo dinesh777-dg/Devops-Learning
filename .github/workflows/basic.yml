@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
 
-Jobs:
+jobs:
   basic:
     runs-on: ["Devops-Learning01"]
     steps:
