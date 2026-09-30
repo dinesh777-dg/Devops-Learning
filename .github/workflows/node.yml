@@ -24,6 +24,8 @@ jobs:
         run: |
           echo "port=8080" >> .env.development  
           echo "APP-GHA-DEV-APP" >> .env.development  
+          echo "port=5000" >> .env.production  
+          echo "APP-GHA-PROD-APP" >> .env.production 
 
       - name: Run Node application
         run: |
