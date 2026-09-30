@@ -1,0 +1,22 @@
+name: Sonarqube pipeline
+
+on:
+  pull_request: 
+    branches: ["main"]
+
+jobs:
+  sonar:
+    runs-on: ["Devops-Learning01"]
+
+    steps:
+       - name: clone the code
+        uses: actions/checkout@v7
+        
+       - name: sonarqube analysis
+         uses: SonarSource/sonarqube-scan-action@v8.2.2
+         with:
+           args: >
+             -Dsonar.projectKey=NodeApp
+             -Dsonar.sources=.
+             -Dsonar.host.url=http://localhost:9000
+             -Dsonar.token=sqp_a706d8e5e8a17306a6da5d24939cc76cd9474a05  
