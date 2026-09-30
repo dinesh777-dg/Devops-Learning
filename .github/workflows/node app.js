@@ -1,10 +1,14 @@
-- name: Check application files
+- name: Run Node application
   run: |
-    echo "Current directory:"
-    pwd
+    node app.js > app.log 2>&1 &
 
-    echo "Files:"
-    ls -la
+    sleep 5
 
-    echo "Environment file:"
-    cat .env.development
+    echo "===== Application Log ====="
+    cat app.log
+
+    echo "===== Port Check ====="
+    ss -lntp || true
+
+    echo "===== Health Check ====="
+    curl -v http://localhost:8080/health
