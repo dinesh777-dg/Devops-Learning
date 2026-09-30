@@ -1,0 +1,14 @@
+FROM node:lts-alpine3.24 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+
+FROM node:lts-alpine3.24
+WORKDIR /app
+COPY --from=build /app/node_modules ./node_modules
+COPY app.js ./
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+EXPOSE 8080
+ENTRYPOINT ["node"]
+CMD ["app.js"]

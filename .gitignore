@@ -1,0 +1,14 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node dependencies
+node_modules/
+
+# Application logs
+app/logs/
+*.log
+
+# GitHub Actions self-hosted runner
+actions-runner/
