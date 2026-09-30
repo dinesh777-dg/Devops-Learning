@@ -22,10 +22,10 @@ jobs:
 
       - name: Create .env files
         run: |
-          echo "port=8080" >> .env.development  
-          echo "APP-GHA-DEV-APP" >> .env.development  
-          echo "port=5000" >> .env.production  
-          echo "APP-GHA-PROD-APP" >> .env.production 
+          echo "PORT=8080" > .env.development
+          echo "APP_NAME=APP-GHA-DEV-APP" >> .env.development
+          echo "PORT=5000" > .env.production
+          echo "APP_NAME=APP-GHA-PROD-APP" >> .env.production 
 
       - name: Run Node application
         run: |
