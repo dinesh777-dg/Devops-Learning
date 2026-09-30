@@ -7,8 +7,7 @@ on:
 Jobs:
   basic:
     runs-on: ["Devops-Learning01"]
-
-steps:
-  - name: Basic GHA Pipeline
-    run: echo  "my basic GHA Pipeline"
+    steps:
+      - name: Basic GHA Pipeline
+        run: echo  "my basic GHA Pipeline"
   
