@@ -1,0 +1,30 @@
+name: Docker CI pipeline
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: 
+
+jobs:
+  sonarqube:
+    runs-on: ["Devops-Learning01"]
+
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@v7
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v4.6.0
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker Image
+        run: docker build -f Dockerfile.distroless -t distroless .
+
+      - name: Tag and push Docker Image
+        run: |
+          SHA=${GITHUB_SHA::7}
+          docker tag distroless ${{ vars.DOCKERHUB_USERNAME }}/nodeapp:$SHA
+          docker push distroless ${{ vars.DOCKERHUB_USERNAME }}/nodeapp:$SHA
+           
