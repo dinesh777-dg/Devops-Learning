@@ -21,7 +21,7 @@ on:
         options:
           - 8080
           - 5000
-          
+        
 jobs:
   basic:
     runs-on: ["Devops-Learning01"]
