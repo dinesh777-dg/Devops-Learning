@@ -1,4 +1,4 @@
-name: node pipeline
+name: Node pipeline
 
 on:
   push:
