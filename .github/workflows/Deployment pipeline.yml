@@ -1,0 +1,56 @@
+name: Node pipeline
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: 
+    inputs:
+      environment:
+        description: choose the environment to run
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - production
+      port: 
+        description: Port of the application
+        required: true
+        default: "8080"
+        type: choice
+        options:
+          - 8080
+          - 5000
+      
+jobs:
+  basic:
+    runs-on: ["Devops-Learning01"]
+    steps:
+      - name: clone the code
+        uses: actions/checkout@v7
+
+      - name: setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24 
+          
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create .env files
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" == "development" ]]; then 
+            echo "PORT=8080" > .env.development 
+            echo "APP_NAME=APP-GHA-DEV-APP" >> .env.development
+          else:  
+          echo "PORT=5000" > .env.production
+          echo "APP_NAME=APP-GHA-PROD-APP" >> .env.production 
+         fi
+      - name: Run Node application
+        run: |
+          node app.js "${{ github.event.inputs.environment }}" &
+          sleep 5 
+          curl http://localhost:"${{ github.event.inputs.port }}"
+          curl http://localhost:"${{ github.event.inputs.port }}"/health
+          pkill -f "node app.js"
+        
